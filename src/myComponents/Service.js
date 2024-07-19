@@ -12,6 +12,7 @@ export default function Service() {
   const [serviceName, setServiceName] = useState("");
   const [servicePrice, setServicePrice] = useState("");
   const [serviceContact, setServiceContact] = useState("");
+  const [reviewData, setReviewData] = useState("");
   // eslint-disable-next-line no-unused-vars
   const [serviceType, setServiceType] = useState("");
   const [serviceDescription, setServiceDescription] = useState("");
@@ -34,6 +35,16 @@ export default function Service() {
       const response = await fetch("http://localhost:8000/getService");
       const json = await response.json();
       setData(json);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+      //   alert(error);
+    }
+  };
+  const fetchReviewData = async () => {
+    try {
+      const response = await fetch("http://localhost:8000/getReview");
+      const json = await response.json();
+      setReviewData(json);
     } catch (error) {
       console.error("Error fetching data:", error);
       //   alert(error);
@@ -108,6 +119,7 @@ export default function Service() {
   };
   useEffect(() => {
     fetchServiceData();
+    fetchReviewData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   return (
@@ -183,6 +195,35 @@ export default function Service() {
                       </tr>
                     </tbody>
                   ))
+              ) : (
+                <tbody>
+                  <tr>
+                    <td colspan='5'>No Data Found</td>
+                  </tr>
+                </tbody>
+              )}
+            </table>
+            <h1 className='text-primary fw-bold text-decoration-underline mb-3'>
+              User Review's
+            </h1>
+            <table className='table table-dark table-bordered border-light'>
+              <thead>
+                <tr>
+                  {/* <th scope='col'>No.</th> */}
+                  <th scope='col'>User Name</th>
+                  <th scope='col'>Description</th>
+                </tr>
+              </thead>
+              {Array.isArray(reviewData) ? (
+                reviewData.map((data, index) => (
+                  <tbody className='table-group-divider'>
+                    <tr key={data._id}>
+                      {/* <th scope='row'>{count + index}</th> */}
+                      <td> {data.userName}</td>
+                      <td>{data.description}</td>
+                    </tr>
+                  </tbody>
+                ))
               ) : (
                 <tbody>
                   <tr>
